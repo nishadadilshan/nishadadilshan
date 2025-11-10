@@ -1,41 +1,35 @@
-name: GitHub contribution snake
+name: Generate GitHub Contribution Snake
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # runs daily at 00:00 UTC (adjust if you want)
-  workflow_dispatch:      # allows manual run from Actions tab
+    - cron: "0 0 * * *" # runs every day at midnight
+  workflow_dispatch:    # allows manual runs from Actions tab
   push:
-    branches: ["main", "master"]
+    branches: ["main"]
 
 jobs:
-  snake:
+  generate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
           fetch-depth: 0
 
-      - name: Generate contribution snake SVG
-        uses: platane/snk@v1
+      - name: Generate snake animation
+        uses: Platane/snk@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          username: nishadadilshan
-          output: output/github-contribution-grid-snake.svg
-          include-owner: true
-          # optional visual params:
-          # theme: default
-          # hide_border: false
+          github_user_name: nishadadilshan
+          outputs: dist/github-contribution-grid-snake.svg
 
-      - name: Commit generated file (if changed)
+      - name: Commit and push snake animation
         run: |
+          mkdir -p output
+          cp dist/github-contribution-grid-snake.svg output/github-contribution-grid-snake.svg
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain)" ]; then
-            git add output/github-contribution-grid-snake.svg
-            git commit -m "chore: update contribution snake"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+          git add output/github-contribution-grid-snake.svg
+          git commit -m "Update contribution snake" || echo "No changes to commit"
+          git push
