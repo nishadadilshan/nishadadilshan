@@ -93,7 +93,7 @@
 ---
 
 ### 🐍 Contribution Snake
-![Snake animation](https://github.com/nishadadilshan/nishadadilshan/blob/output/github-contribution-grid-snake.svg)
+![Snake animation](https://github.com/nishadadilshan/nishadadilshan/raw/output/github-contribution-grid-snake.svg)
 
 ---
 
